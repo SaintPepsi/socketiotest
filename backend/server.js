@@ -6,6 +6,8 @@ const io = require('socket.io')({
 
 let entities = [];
 let id = 0;
+
+// Create new entity each 100ms and send to client
 setInterval(() => {
   let newEntity = new Ent();
   entities.push(newEntity);
@@ -16,6 +18,7 @@ setInterval(() => {
   }
 }, 100);
 
+// Create random updates for client to do.
 setInterval(() => {
   let updated = [];
   let am = random(1, 5);
@@ -32,6 +35,7 @@ setInterval(() => {
   }
 }, 250);
 
+// update entities and remove any that get deleted. also send message to client about it.
 setInterval(() => {
   entities.forEach((entity) => {
     entity.update();
@@ -55,6 +59,7 @@ io.on('connection', (socket) => {
 
   socket.on('join_game', () => {
     console.log('joinGame');
+    // Send entities to client when joined
     connectedClients[socket.id] = socket;
     socket.emit('new_entities', entities);
   });
@@ -71,6 +76,7 @@ io.on('connection', (socket) => {
 
 io.listen(process.env.PORT || 3000);
 
+// Simple dummy entity
 class Ent {
   constructor() {
     id++;
@@ -94,6 +100,7 @@ class Ent {
   }
 }
 
+// Random function
 function random(min, max) {
   var rand;
 

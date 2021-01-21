@@ -10,11 +10,13 @@ socket.on('init', function (id) {
 let entities = {};
 
 socket.on('delete_entity', function (id) {
+  // When delete entity gets called from the server it removes this entity. whether it exists or not.
   console.log('delete entity id', id);
   delete entities[id];
 });
 
 socket.on('new_entities', function (data) {
+  // recieve inital entities.
   console.log('data', data);
 
   data.forEach((entry) => {
@@ -29,6 +31,7 @@ socket.on('new_entities', function (data) {
 socket.on('updated_entities', function (data) {
   console.log('data', data);
 
+  // update entities. if they exist. otherwise just ignore.
   data.forEach((entry) => {
     let updatedEntity = entities[entry.id];
     if (updatedEntity) {
@@ -36,6 +39,7 @@ socket.on('updated_entities', function (data) {
       Object.assign(updatedEntity, entry);
     } else {
       console.log('entity doesnt exist,');
+      // Could create a new entity here but might be useless if it already gets deleted after
     }
   });
 });
@@ -123,6 +127,7 @@ function onProcess() {
   requestAnimationFrame(onProcess);
 }
 
+// Simple client entity
 class ClientEnt {
   constructor() {
     this.ready = false;
